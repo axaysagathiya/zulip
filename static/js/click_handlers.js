@@ -29,6 +29,7 @@ import * as narrow from "./narrow";
 import * as navigate from "./navigate";
 import * as notifications from "./notifications";
 import * as overlays from "./overlays";
+import * as popover_menus from "./popover_menus";
 import * as popovers from "./popovers";
 import * as reactions from "./reactions";
 import * as recent_topics_ui from "./recent_topics_ui";
@@ -671,7 +672,7 @@ export function initialize() {
             e.stopPropagation();
         }
         // Still hide the popovers, however
-        popovers.hide_all();
+        popovers.hide_all(true, popover_menus.compose_formatting_popover_instance);
     }
 
     $("body").on("click", "#compose-content", handle_compose_click);
