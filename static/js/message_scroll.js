@@ -129,12 +129,40 @@ export function hide_top_of_narrow_notices() {
     hide_history_limit_notice();
 }
 
+let hide_scroll_to_bottom_timer;
+export function hide_scroll_to_bottom() {
+    if (message_viewport.bottom_message_visible()) {
+        // If last message is visible, just hide the
+        // scroll to bottom button.
+        $("#scroll-to-bottom-button-container").hide();
+        return;
+    }
+
+    // Wait 2s before hiding to allow user time to click on the button.
+    hide_scroll_to_bottom_timer = setTimeout(() => {
+        $("#scroll-to-bottom-button-container").hide();
+    }, 2000);
+}
+
+export function show_scroll_to_bottom_button() {
+    if (message_viewport.bottom_message_visible()) {
+        // Only show scroll to bottom button when
+        // last message is not visible in the
+        // current scroll position.
+        return;
+    }
+
+    clearTimeout(hide_scroll_to_bottom_timer);
+    $("#scroll-to-bottom-button-container").show();
+}
+
 export function is_actively_scrolling() {
     return actively_scrolling;
 }
 
 export function scroll_finished() {
     actively_scrolling = false;
+    hide_scroll_to_bottom();
 
     if (!$("#message_feed_container").hasClass("active")) {
         return;
@@ -170,6 +198,7 @@ export function scroll_finished() {
 let scroll_timer;
 function scroll_finish() {
     actively_scrolling = true;
+    show_scroll_to_bottom_button();
     clearTimeout(scroll_timer);
     scroll_timer = setTimeout(scroll_finished, 100);
 }
